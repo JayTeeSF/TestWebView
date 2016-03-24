@@ -45,14 +45,8 @@ const PRE_HTML = `
       body {
         margin: 0;
         padding: 0;
-        font: 62.5% arial, sans-serif;
-        background: #ccc;
-      }
-      h1 {
-        padding: 45px;
-        margin: 0;
+        font: arial, sans-serif;
         text-align: center;
-        color: #33f;
       }
     </style>
   <body>
@@ -61,7 +55,10 @@ const POST_HTML = `
   </body>
 </html>
 `;
+/*
 const BGWASH = 'rgba(255,255,255,0.8)';
+    backgroundColor: BGWASH,
+*/
 
 class TestWebView extends Component {
   constructor(props) {
@@ -166,9 +163,8 @@ const styles = StyleSheet.create({
     height: actualCardHeight,
   },
   webView: {
-    backgroundColor: BGWASH,
-    top: marginTop,
-    left: marginLeft,
+    top: 0,
+    left: 0,
     height: actualCardHeight,
     width: actualCardWidth,
   },

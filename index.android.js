@@ -12,7 +12,9 @@ import React, {
   StyleSheet,
   Text,
   TouchableHighlight,
-  View
+  TouchableOpacity,
+  View,
+  WebView
 } from 'react-native';
 
 /* TBD: try adding this to the HTML:
@@ -48,47 +50,70 @@ const BGWASH = 'rgba(255,255,255,0.8)';
 class TestWebView extends Component {
   constructor(props) {
     super(props)
+    let renderers = ['tinyRender', 'hiddenRender']
+    let render_index = Math.floor((Math.random() * 1) + 1);
     this.state = {
-      renderMethod: 'tinyRender' // alternatively try 'hiddenRender'
+      renderMethod: renderers[render_index] // random
     }
   }
 
   render() {
-    if ('tinyRender' == self.state.renderMethod) {
-      return tinyRender()
+    if ('tinyRender' == this.state.renderMethod) {
+      return this.tinyRender()
     } else {
-      return hiddenRender()
+      return this.hiddenRender()
     }
   }
 
-  html(htmlSnippet) {
+  tinyRender() {
+    console.log("tinyRender")
+    return (
+      <TouchableOpacity onPress={() => this.otherRenderer()} underlayColor='#dddddd' style={styles.card}>
+      <View>
+        <WebView
+          style={styles.webView}
+          source={{html: this.htmlFor("<p>TouchableOpacity: I want to see this HTML snippet</p>")}}
+          scalesPageToFit={true}
+        />
+      </View>
+      </TouchableOpacity>
+    )
+  }
+
+  hiddenRender() {
+    console.log("hiddenRender")
+    return (
+      <TouchableHighlight onPress={() => this.otherRenderer()} underlayColor='#dddddd' style={styles.card}>
+        <View>
+          <WebView
+            style={styles.webView}
+            source={{html: this.htmlFor("<p>TouchableHighlight: I want to see this HTML snippet</p>")}}
+            scalesPageToFit={true}
+          />
+        </View>
+      </TouchableHighlight>
+    )
+  }
+
+  htmlFor(htmlSnippet) {
     let htmlText = PRE_HTML + htmlSnippet + POST_HTML
     console.log("presenting HTML: " + htmlText)
     return htmlText
   }
 
-  tinyRender() {
-    <View style={styles.card}>
-      <WebView
-        style={styles.webView}
-        source={{html: this.htmlFor("<p>I want to see this HTML snippet</p>")}}
-        scalesPageToFit={true}
-      />
-    </View>
-  }
+  otherRenderer() {
+    var otherRenderMethod = 'tinyRender'
+    console.log("Got Click")
+    switch (this.state.renderMethod) {
+      case 'tinyRender':
+        otherRenderMethod = 'hiddenRender'
+        break;
+      default:
+        otherRenderMethod = 'tinyRender'
+        break;
+    }
 
-  hiddenRender() {
-    return (
-      <TouchableHighlight onPress={() => this.flipToQuestion()} underlayColor='#dddddd' style={styles.card}>
-        <View>
-          <WebView
-            style={styles.webView}
-            source={{html: this.html()}}
-            scalesPageToFit={true}
-          />
-        </View>
-      </TouchableHighlight>
-    );
+    this.setState({renderMethod: otherRenderMethod})
   }
 }
 
